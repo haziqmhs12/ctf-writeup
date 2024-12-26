@@ -181,6 +181,8 @@ private $flag = "CyberX{L0c4l_F1l3_1nclus10n_1s_Fun!}";
 ## Shoot the SQL
 >Our new website's search function lets you browse through our extensive catalog of products and accessories. However, our junior developer might have forgotten some basic security practices while implementing the product search feature. Can you find a way to exploit this oversight and retrieve unauthorized information from our database?
 
+![Image](images/Shoot-the-SQL1.PNG)
+
 This challenge is sql challenge whcich I hope there is no this kind of SQL challenge in this CTF but yeah Im dead.
 We need to enter text and search it will give table.
 
