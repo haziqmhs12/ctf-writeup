@@ -237,4 +237,101 @@ should not have select * again since we have put select in the front and we can 
 ```
 '  UNION SELECT NULL, NULL, NULL, NULL, flag FROM flag -- #
 ```
+# Reverse Engineering 
+## keygenme
+>The program is used to check the authenticity of the serial number. Can you find the correct serial?
+
+There is 2 class java file InputChecker.class and KeyGenMe.class.
+KeyGenMe file is the main where it ask for user input and will send the input to InputChecker which check each position to match a character
+```
+some part of InputChecker
+   public static boolean checkInput(String var0) {
+      if (var0.length() != 40) {
+         return false;
+      } else if (var0.charAt(39) != '9') {
+         return false;
+      } else if (var0.charAt(38) != 'l') {
+         return false;
+      } else if (var0.charAt(37) != '1') {
+         return false;
+      } else if (var0.charAt(36) != 'c') {
+```
+The input must be 40 in length and each position must match the character.
+```
+Q3liZXJYe2pBdkFfYll0RV9jMERlX2lTX2VBc1l9
+```
+So after done copy back the key to it position then I try run the java code to check the key if it right or wrong (take some try because some character is skipped and some is uppercase or lowercase problem). 
+
+The key is correct and next is to decode and I can see from it combination of uppercase and lowercase and number which maybe is a base 64 encoded so We decode and got the flag
+```
+CyberX{jAvA_bYtE_c0De_iS_eAsY}
+```
+## Suspicious Document
+>Your team works as cybersecurity analysts for a company named SecureTech Solutions Inc.. The IT department has reported receiving a suspicious Microsoft Word document from an unknown sender.
+The document appears to be legitimate at first glance, but there are signs it might contain hidden code. The IT team suspects it could execute a malicious program or download a payload.
+Find out what the malicious document does.
+
+As per description the docm file contain hidden code where it will download payload.exe from github and execute the file which print the flag
+To Analyze the file we use tools [oletools](https://github.com/decalage2/oletools) which can help to analyze malicious documents.
+
+So first I use olevba whcih part of the oletools whcih can extract source code in clear text of the macro code
+```
+olevba Confidential\ Job\ Offer.docm > mzcros.txt
+```
+Then we can view the mzcros.txt which give us the url to download the payload.exe
+```
+URL = "https://github.com/HisyamFirdaus03/Payload_1/raw/refs/heads/main/payload.exe"
+```
+So we download the payload and run strings and grep to grep flag
+```
+CyberX{cArEfuL_w1tH_mAcr0s_d0c}
+```
+## crackme
+>The program is protected by a password. Do you have what it takes to crack the password?
+
+So i use ghidra to view the source code and I found 
+```
+main function - ask input and will compare with encode key then if match call generate flag
+encode - to encode key
+generate flag - to generate flag
+```
+At first I think I need to reverse engineer the generate flag function but there is alot of code that cannot understand so I sit infornt of the computer and read the code and give up do other challenge.
+
+After a while comeback to it and read the main and found that there is hex value to a variable whcich an array 
+```
+  local_3f = 0x45627943; //EbyC
+  local_3b = 0x465f5872; //F_Xr
+  local_37 = 0x74537231; //tSr1
+  local_33 = 0x4168435f; //AhC_
+  local_2f = 0x4c6c      //Ll
+```
+So here I think I have found the flag but nah it not even the key. So this is the key after rearrange from little endian form
+```
+CybErX_F1rSt_ChAlL
+```
+After read the main function the program use this key and encode by adding 5 to each character and ask user input whcih will conpared input with the encoded key then it will give the flag
+```
+The key:
+H~gJw]dK6wXydHmFqQ
+
+The flag:
+CyberX{F1rsT_cHaLL_iS_eAsY_i$nt_iT} 
+```
+
+## Hidden
+>The program contains multiple different hidden functions. Figure out which function is the correct function. Good Luck :)
+
+The last RE challenge where we need to find the correct hidden function to get the flag. So it contains 4 hidden function which the hidden function 3 is the correct which will give the flag.
+
+It is easy to identify the hidden function, the problem is that we need to call the function which I have never done this.
+So i try to call like it call other function but the function is not called out. So I try several time still not working 
+
+![Image](images/Hidden1.PNG)
+
+So here we have several choice to choose I always choose the first one which lead to failed so then I try the last one and it is working.
+
+```
+CyberX{pAtcH1nG_!s_fUn}
+```
+
 
